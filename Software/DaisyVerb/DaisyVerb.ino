@@ -20,7 +20,7 @@ Overdrive drive;
 
 static float dryLevel, wetLevel, send;
 float jitterMixKnob;
-float verbMixKnob;
+float wetLevel;
 float srKnob;
 
 
@@ -41,7 +41,7 @@ void MyCallback(float **in, float **out, size_t size) {
     jitter_out = jitter.Process();  
     verb.Process(dryL, dryR, &verbL, &verbR);
   
-    out[0][i] = (dryL * dryLevel) + verbL * ((1-jitterMixKnob) + (jitter_out * jitterMixKnob)) * verbMixKnob;
+    out[0][i] = (dryL * dryLevel) + verbL * ((1-jitterMixKnob) + (jitter_out * jitterMixKnob)) * wetLevel;
     out[1][i] = (dryR * dryLevel) + verbR;
   }
 }
@@ -71,9 +71,8 @@ void setup() {
 
 void loop() {
   dryLevel = CtrlVal(A0);
-  verb.SetFeedback(0.75f + CtrlVal(A1) * .2499f);
- 
-  verbMixKnob = CtrlVal(A2);
+  wetLevel = CtrlVal(A1);
+  verb.SetFeedback(0.75f + CtrlVal(A2) * .2499f);
   jitterMixKnob = CtrlVal(A3);
  
   verb.SetLpFreq(CtrlVal(A4) * 20000.0f);
