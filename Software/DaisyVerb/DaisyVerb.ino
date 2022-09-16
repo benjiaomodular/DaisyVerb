@@ -20,7 +20,6 @@ Overdrive drive;
 
 static float dryLevel, wetLevel, send;
 float jitterMixKnob;
-float wetLevel;
 float srKnob;
 
 
