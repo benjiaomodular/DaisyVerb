@@ -14,7 +14,7 @@ ReverbSc DSY_SDRAM_BSS verb;
 PitchShifter DSY_SDRAM_BSS ps;
 
 static Jitter jitter;
-SampleRateReducer sr;
+static Bitcrush bitcrush;
 
 Overdrive drive;
 
@@ -39,7 +39,7 @@ void MyCallback(float **in, float **out, size_t size) {
 
     jitter_out = jitter.Process();  
     verb.Process(dryL, dryR, &verbL, &verbR);
-  
+
     out[0][i] = (dryL * dryLevel) + verbL * ((1-jitterMixKnob) + (jitter_out * jitterMixKnob)) * wetLevel;
     out[1][i] = (dryR * dryLevel) + verbR;
   }
@@ -62,8 +62,6 @@ void setup() {
   jitter.SetCpsMin(1);
   jitter.SetCpsMax(25);
 
-  sr.Init();
-
   wetLevel = 0.1f;
   DAISY.begin(MyCallback);
 }
@@ -71,7 +69,7 @@ void setup() {
 void loop() {
   dryLevel = CtrlVal(A0);
   wetLevel = CtrlVal(A1);
-  verb.SetFeedback(0.75f + CtrlVal(A2) * .2499f);
+  verb.SetFeedback(0.8f + CtrlVal(A2) * .199f);
   jitterMixKnob = CtrlVal(A3);
  
   verb.SetLpFreq(CtrlVal(A4) * 20000.0f);
